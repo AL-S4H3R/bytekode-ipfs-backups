@@ -23,8 +23,17 @@ const listAllBuckets = async () => {
     })
 }
 
-const uploadToBucket = async () => {
-    
+const uploadToBucket = async (filename: string) => {
+    awsClient.putObject({
+        Bucket: 'bytekode-test-bucket',
+        Key: `contracts/${filename}`,
+        Body: 'Test',
+        ContentType: 'text/plain'
+    }, (err, data) => {
+        console.log(data)
+    })
 }
 
-schedule('* * * * 1', () => console.log('Running'))
+uploadToBucket('TestContract')
+// runs every minute
+// schedule('* * * * 1', () => console.log('Running'))
