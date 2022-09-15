@@ -87,21 +87,36 @@ const getDatabaseDetails = async () => {
 // runs every minute
 // schedule('* * * * 1', () => console.log('Running'))
 
-interface ContractDetails {
-
-}
-const getContractDetails = async () => {
+const contractsBackup = async () => {
     const { data: contracts, error: conErr } = await supabaseClient.from('contracts').select('*')
     contracts && console.log(JSON.stringify(contracts))
     // upload contract data to ipfs.
-    awsClient.putObject({
-        Bucket: 'bytekode-test-bucket',
-        Key: `contracts/${Date.now()}`,
-        Body: JSON.stringify(contracts),
-        ContentType: 'application/json'
-    }, (err, data) => {
-        console.log(data)
-    })
+    if(!conErr){
+        awsClient.putObject({
+            Bucket: 'bytekode-test-bucket',
+            Key: `contracts/${Date.now()}`,
+            Body: JSON.stringify(contracts),
+            ContentType: 'application/json'
+        }, (err, data) => {
+            err && console.log('Error uploading contracts to IPFS')
+            console.log(data)
+        })
+    }
 }
 
-getContractDetails()
+const historiesBackup = async () => {
+    const { data: history, error: conErr } = await supabaseClient.from('history').select('*')
+    history && console.log(JSON.stringify(history))
+    // upload history data to ipfs.
+    if(!conErr){
+        awsClient.putObject({
+            Bucket: 'bytekode-test-bucket',
+            Key: `history/${Date.now()}`,
+            Body: JSON.stringify(history),
+            ContentType: 'application/json'
+        }, (err, data) => {
+            err && console.error('Error uploading history to IPFS')
+            console.log(data)
+        })
+    }
+}
