@@ -2,6 +2,7 @@ import { config } from 'dotenv'
 import { S3 } from 'aws-sdk'
 import { schedule } from 'node-cron'
 import { createClient } from '@supabase/supabase-js'
+// import { uploader } from './arcana_store'
 
 config()
 
@@ -25,7 +26,7 @@ const supabaseClient = createClient(
 )
 
 // schedule('* * * * 1', () => console.log('Running'))
-const contractsBackup = async () => {
+const contractsBackupIPFS = async () => {
     const { data: contracts, error: conErr } = await supabaseClient.from('contracts').select('*')
     contracts && console.log(JSON.stringify(contracts))
     // upload contract data to ipfs.
@@ -42,7 +43,7 @@ const contractsBackup = async () => {
     }
 }
 
-const historiesBackup = async () => {
+const historiesBackupIPFS = async () => {
     const { data: history, error: conErr } = await supabaseClient.from('history').select('*')
     history && console.log(JSON.stringify(history))
     // upload history data to ipfs.
@@ -57,4 +58,7 @@ const historiesBackup = async () => {
             console.log(data)
         })
     }
+    // uploader.upload(new Blob(history!))
 }
+
+historiesBackupIPFS()
