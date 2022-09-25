@@ -1,0 +1,4 @@
+Whats gonna happen?
+
+Every 10th minute of the hour -> histories data is backed up to IPFS
+Every 9th minute -> contracts data.
